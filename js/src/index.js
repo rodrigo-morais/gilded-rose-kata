@@ -1,4 +1,4 @@
-const { MIN_QUALITY_LIMIT, MAX_QUALIT_LIMIT, MIN_SELL_IN_LIMIT } = require('./constants');
+const { MIN_QUALITY_LIMIT, MAX_QUALITY_LIMIT, MIN_SELL_IN_LIMIT } = require('./constants');
 
 const create_item = (
   name, sell_in, quality, degrade_quality = '-', degrade = true
@@ -39,7 +39,8 @@ const update_quality = function (items = []) {
     if (item.name != 'Sulfuras, Hand of Ragnaros') {
       item.sell_in = item.sell_in - 1;
     }
-    if (item.sell_in < 0) {
+    if (item.sell_in < MIN_SELL_IN_LIMIT) {
+      item.multiplier = item.multiplier * 2
       if (item.name != 'Aged Brie') {
         if (item.name != 'Backstage passes to a TAFKAL80ETC concert') {
           if (item.quality > MIN_QUALITY_LIMIT) {
