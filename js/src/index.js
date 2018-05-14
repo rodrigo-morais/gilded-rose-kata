@@ -1,10 +1,15 @@
 const { MIN_QUALITY_LIMIT, MAX_QUALIT_LIMIT, MIN_SELL_IN_LIMIT } = require('./constants');
 
-function Item(name, sell_in, quality) {
-  this.name = name;
-  this.sell_in = sell_in;
-  this.quality = quality;
-}
+const create_item = (
+  name, sell_in, quality, degrade_quality = '-', degrade = true
+) => ({
+  name,
+  sell_in,
+  quality,
+  degrade_quality,
+  degrade,
+  multiplier: 1
+}) 
 
 const update_quality = function (items = []) {
   return items.map(item => {
@@ -55,4 +60,4 @@ const update_quality = function (items = []) {
   }, []);
 }
 
-module.exports = { update_quality };
+module.exports = { create_item, update_quality };
