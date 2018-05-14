@@ -30,7 +30,7 @@ describe('Gilded Rose', () => {
 
   describe('#update_quality', () => {
     describe('standard items', () => {
-      const items = new Array(1,10).map(number => create_item(
+      const items = new Array(1,2).map(number => create_item(
         `Item ${number}`,
         10,
         25
@@ -44,7 +44,7 @@ describe('Gilded Rose', () => {
       })
 
       describe('when quality is maximum limit', () => {
-        const items = new Array(1,10).map(number => create_item(
+        const items = new Array(1,2).map(number => create_item(
           `Item ${number}`,
           10,
           MAX_QUALITY_LIMIT
@@ -59,7 +59,7 @@ describe('Gilded Rose', () => {
       })
 
       describe('when quality is minimum limit', () => {
-        const items = new Array(1,10).map(number => create_item(
+        const items = new Array(1,2).map(number => create_item(
           `Item ${number}`,
           10,
           MIN_QUALITY_LIMIT
@@ -74,7 +74,7 @@ describe('Gilded Rose', () => {
       })
 
       describe('when sell in is minimum limit', () => {
-        const items = new Array(1,10).map(number => create_item(
+        const items = new Array(1,2).map(number => create_item(
           `Item ${number}`,
           MIN_SELL_IN_LIMIT,
           25
@@ -86,6 +86,20 @@ describe('Gilded Rose', () => {
             expect(item.sell_in).toBe(MIN_SELL_IN_LIMIT - 1)
             expect(item.multiplier).toBe(2)
           })
+        })
+      })
+    })
+
+    describe('no degraded item', () => {
+      const items = [
+        create_item('Sulfuras, Hand of Ragnaros', 10, 25, '-', false),
+        create_item('No degrated', 10, 25, '-', false)
+      ]
+
+      it('returns the same items', () => {
+        update_quality(items).forEach(item => {
+          expect(item.quality).toBe(25)
+          expect(item.sell_in).toBe(10)
         })
       })
     })
