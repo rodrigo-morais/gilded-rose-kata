@@ -133,6 +133,76 @@ describe('Gilded Rose', () => {
             })
           })
         })
+
+        describe('item is "Backstage passes to a TAFKAL80ETC concert"', () => {
+          describe('sell in is less than 11 days', () => {
+            describe('quality is less than maximun', () => {
+              const items = [
+                create_item('Backstage passes to a TAFKAL80ETC concert', 10, 25, '+', true),
+              ]
+
+              it('returns quality with more 2 points', () => {
+                update_quality(items).forEach(item => {
+                  expect(item.quality).toBe(27)
+                  expect(item.sell_in).toBe(9)
+                })
+              })
+            })
+
+            describe('quality is the maximun', () => {
+              const items = [
+                create_item('Backstage passes to a TAFKAL80ETC concert', 10, MAX_QUALITY_LIMIT, '+', true),
+              ]
+
+              it('returns same quality', () => {
+                update_quality(items).forEach(item => {
+                  expect(item.quality).toBe(MAX_QUALITY_LIMIT)
+                  expect(item.sell_in).toBe(9)
+                })
+              })
+            })
+          })
+
+          describe('sell in is less than 6 days', () => {
+            describe('quality is less than maximun', () => {
+              const items = [
+                create_item('Backstage passes to a TAFKAL80ETC concert', 5, 25, '+', true),
+              ]
+
+              it('returns quality with more 3 points', () => {
+                update_quality(items).forEach(item => {
+                  expect(item.quality).toBe(28)
+                  expect(item.sell_in).toBe(4)
+                })
+              })
+            })
+
+            describe('quality is the maximun', () => {
+              const items = [
+                create_item('Backstage passes to a TAFKAL80ETC concert', 5, MAX_QUALITY_LIMIT, '+', true),
+              ]
+
+              it('returns same quality', () => {
+                update_quality(items).forEach(item => {
+                  expect(item.quality).toBe(MAX_QUALITY_LIMIT)
+                  expect(item.sell_in).toBe(4)
+                })
+              })
+            })
+
+            describe('quality drops to 0 after concert', () => {
+              const items = [
+                create_item('Backstage passes to a TAFKAL80ETC concert', 0, 25, '+', true),
+              ]
+
+              it('returns 0 quality', () => {
+                update_quality(items).forEach(item => {
+                  expect(item.quality).toBe(0)
+                })
+              })
+            })
+          })
+        })
       })
     })
   })
