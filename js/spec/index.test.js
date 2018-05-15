@@ -103,5 +103,37 @@ describe('Gilded Rose', () => {
         })
       })
     })
+
+    describe('increase quality', () => {
+      describe('degrade quality is positive', () => {
+        describe('quality is less than maximun', () => {
+          const items = [
+            create_item('increase quality', 10, 25, '+', true),
+            create_item('increase quality 2', 10, 25, '+', true)
+          ]
+
+          it('returns quality bigger than before', () => {
+            update_quality(items).forEach(item => {
+              expect(item.quality).toBe(26)
+              expect(item.sell_in).toBe(9)
+            })
+          })
+        })
+
+        describe('quality is the maximun', () => {
+          const items = [
+            create_item('increase quality', 10, MAX_QUALITY_LIMIT, '+', true),
+            create_item('increase quality 2', 10, MAX_QUALITY_LIMIT, '+', true)
+          ]
+
+          it('returns same quality', () => {
+            update_quality(items).forEach(item => {
+              expect(item.quality).toBe(MAX_QUALITY_LIMIT)
+              expect(item.sell_in).toBe(9)
+            })
+          })
+        })
+      })
+    })
   })
 })

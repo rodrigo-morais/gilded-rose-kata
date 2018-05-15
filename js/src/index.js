@@ -13,7 +13,7 @@ const create_item = (
 
 const update_quality = function (items = []) {
   return items.map(item => {
-    if (item.name != 'Aged Brie' && item.name != 'Backstage passes to a TAFKAL80ETC concert') {
+    if (item.degrade_quality === '-') {
       if (item.quality > MIN_QUALITY_LIMIT) {
         if (item.degrade) {
           item.quality = item.quality - 1
