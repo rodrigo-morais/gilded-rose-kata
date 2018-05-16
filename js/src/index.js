@@ -1,8 +1,14 @@
 const { MIN_QUALITY_LIMIT, MAX_QUALITY_LIMIT, MIN_SELL_IN_LIMIT } = require('./constants');
 
 const create_item = (
-  name, sell_in, quality, degrade_quality = '-', degrade = true, multiplier = 1
-) => ({
+  name,
+  sell_in,
+  quality,
+  {
+    degrade_quality = '-',
+    degrade = true,
+    multiplier = 1
+} = {}) => ({
   name,
   sell_in,
   quality,
