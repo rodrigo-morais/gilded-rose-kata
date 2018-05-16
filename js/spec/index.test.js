@@ -188,6 +188,19 @@ describe('Gilded Rose', () => {
                 })
               })
             })
+
+            describe('quality is one point less the maximun', () => {
+              const items = [
+                create_item('Backstage passes to a TAFKAL80ETC concert', 10, MAX_QUALITY_LIMIT -1, { degrade_quality: '+' }),
+              ]
+
+              it('returns same quality', () => {
+                update_quality(items).forEach(item => {
+                  expect(item.quality).toBe(MAX_QUALITY_LIMIT)
+                  expect(item.sell_in).toBe(9)
+                })
+              })
+            })
           })
 
           describe('sell in is less than 6 days', () => {
@@ -207,6 +220,32 @@ describe('Gilded Rose', () => {
             describe('quality is the maximun', () => {
               const items = [
                 create_item('Backstage passes to a TAFKAL80ETC concert', 5, MAX_QUALITY_LIMIT, { degrade_quality: '+' })
+              ]
+
+              it('returns same quality', () => {
+                update_quality(items).forEach(item => {
+                  expect(item.quality).toBe(MAX_QUALITY_LIMIT)
+                  expect(item.sell_in).toBe(4)
+                })
+              })
+            })
+
+            describe('quality is one point less the maximun', () => {
+              const items = [
+                create_item('Backstage passes to a TAFKAL80ETC concert', 5, MAX_QUALITY_LIMIT -1, { degrade_quality: '+' }),
+              ]
+
+              it('returns same quality', () => {
+                update_quality(items).forEach(item => {
+                  expect(item.quality).toBe(MAX_QUALITY_LIMIT)
+                  expect(item.sell_in).toBe(4)
+                })
+              })
+            })
+
+            describe('quality is one point less the maximun', () => {
+              const items = [
+                create_item('Backstage passes to a TAFKAL80ETC concert', 5, MAX_QUALITY_LIMIT - 2, { degrade_quality: '+' }),
               ]
 
               it('returns same quality', () => {

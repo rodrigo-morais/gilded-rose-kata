@@ -22,32 +22,42 @@ const degrade_quality = item => {
   return Object.assign({}, item, { quality: item.quality - MULTIPLIER < 0 ? 0 : item.quality - MULTIPLIER })
 }
 
-const upgrade_quality = item => {
-  if (item.quality < MAX_QUALITY_LIMIT) {
-    item.quality = item.quality + 1
-
-    if (item.name == 'Backstage passes to a TAFKAL80ETC concert') {
-      if (item.sell_in < 11) {
-        if (item.quality < MAX_QUALITY_LIMIT) {
-          item.quality = item.quality + 1
-        }
-      }
-      if (item.sell_in < 6) {
-        if (item.quality < MAX_QUALITY_LIMIT) {
-          item.quality = item.quality + 1
-        }
-      }
-      if (item.sell_in < MIN_SELL_IN_LIMIT) {
-        item.quality = item.quality - item.quality
-      }
+const upgrade_quality_backstage = item => {
+  if (item.sell_in < MIN_SELL_IN_LIMIT) {
+    return Object.assign({}, item, { quality: 0 })
+  }
+  else if (item.sell_in < 6) {
+    if (item.quality + (item.multiplier * 3) < MAX_QUALITY_LIMIT) {
+      return Object.assign({}, item, { quality: item.quality + (item.multiplier * 3) })
     }
-    if (item.name === 'Aged Brie' &&
-      item.quality < MAX_QUALITY_LIMIT) {
-      item.quality = item.quality + 1
+    else {
+      return Object.assign({}, item, { quality: MAX_QUALITY_LIMIT })
     }
   }
+  else if (item.sell_in < 11) {
+    if (item.quality + (item.multiplier * 2) < MAX_QUALITY_LIMIT) {
+      return Object.assign({}, item, { quality: item.quality + (item.multiplier * 2) })
+    }
+    else {
+      return Object.assign({}, item, { quality: MAX_QUALITY_LIMIT })
+    }
+  }
+  else {
+    item.quality = item.quality + item.multiplier
+  }
+}
 
-  return item
+const upgrade_quality = item => {
+  if (item.quality + item.multiplier < MAX_QUALITY_LIMIT) {
+    switch (item.name) {
+      case 'Backstage passes to a TAFKAL80ETC concert':
+        return upgrade_quality_backstage(item)
+      default:
+        return Object.assign({}, item, { quality: item.quality + item.multiplier })
+    }
+  } else {
+    return Object.assign({}, item, { quality: MAX_QUALITY_LIMIT })
+  }
 }
 
 const degrade_sell_in = item => Object.assign({}, item, { sell_in: item.sell_in - 1 })
