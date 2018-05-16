@@ -58,14 +58,10 @@ const upgrade_quality = item => {
 
 const degrade_sell_in = item => Object.assign({}, item, { sell_in: item.sell_in - 1 })
 
-const update_item = item => {
-  switch (item.degrade_quality) {
-    case '+':
-      return upgrade_quality(degrade_sell_in(item))
-    default:
-      return degrade_quality(degrade_sell_in(item))
-  }
-}
+const update_item = item =>
+  item.degrade_quality === '+' ?
+    upgrade_quality(degrade_sell_in(item)) : 
+    degrade_quality(degrade_sell_in(item))
 
 const update_quality = (items = []) =>
   items.map(item => item.degrade ? update_item(item) : item, [])
