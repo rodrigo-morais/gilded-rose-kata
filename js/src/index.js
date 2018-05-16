@@ -23,27 +23,23 @@ const degrade_quality = item => {
 }
 
 const upgrade_quality_backstage = item => {
+  let MULTIPLIER = item.multiplier
+  if (item.sell_in < 6) {
+    MULTIPLIER = item.multiplier * 3
+  } else if (item.sell_in < 11) {
+    MULTIPLIER = item.multiplier * 2
+  }
+
   if (item.sell_in < MIN_SELL_IN_LIMIT) {
     return Object.assign({}, item, { quality: 0 })
   }
-  else if (item.sell_in < 6) {
-    if (item.quality + (item.multiplier * 3) < MAX_QUALITY_LIMIT) {
-      return Object.assign({}, item, { quality: item.quality + (item.multiplier * 3) })
-    }
-    else {
-      return Object.assign({}, item, { quality: MAX_QUALITY_LIMIT })
-    }
-  }
-  else if (item.sell_in < 11) {
-    if (item.quality + (item.multiplier * 2) < MAX_QUALITY_LIMIT) {
-      return Object.assign({}, item, { quality: item.quality + (item.multiplier * 2) })
-    }
-    else {
-      return Object.assign({}, item, { quality: MAX_QUALITY_LIMIT })
-    }
-  }
   else {
-    item.quality = item.quality + item.multiplier
+    if (item.quality + MULTIPLIER < MAX_QUALITY_LIMIT) {
+      return Object.assign({}, item, { quality: item.quality + MULTIPLIER })
+    }
+    else {
+      return Object.assign({}, item, { quality: MAX_QUALITY_LIMIT })
+    }
   }
 }
 
