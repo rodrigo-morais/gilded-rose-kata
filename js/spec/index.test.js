@@ -80,11 +80,36 @@ describe('Gilded Rose', () => {
           25
         ), [])
 
-        it('returns all items with less one sell_in, less two of quality points and multiplier double', () => {
+        it('returns all items with less one sell_in and less two of quality points', () => {
           update_quality(items).forEach(item => {
             expect(item.quality).toBe(23)
             expect(item.sell_in).toBe(MIN_SELL_IN_LIMIT - 1)
-            expect(item.multiplier).toBe(2)
+          })
+        })
+
+        describe('when multiplier is 2', () => {
+          const items = [
+            create_item('Conjured', MIN_SELL_IN_LIMIT, 25, '-', true, 2)
+          ]
+
+          it('returns item with less four of quality points', () => {
+            update_quality(items).forEach(item => {
+              expect(item.quality).toBe(21)
+              expect(item.sell_in).toBe(MIN_SELL_IN_LIMIT - 1)
+            })
+          })
+        })
+      })
+
+      describe('when multiplier is 2', () => {
+        const items = [
+          create_item('Conjured', 5, 25, '-', true, 2)
+        ]
+
+        it('returns all items with less two of quality points', () => {
+          update_quality(items).forEach(item => {
+            expect(item.quality).toBe(23)
+            expect(item.sell_in).toBe(4)
           })
         })
       })
