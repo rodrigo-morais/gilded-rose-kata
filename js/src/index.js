@@ -11,30 +11,30 @@ const create_item = (
 }) 
 
 const qualify_item = item => Object.assign({}, item, {
-  multiplier: item.name === 'Aged Brie' || item.name === 'Conjured' ? 2 : 1,
+  quality_variant: item.name === 'Aged Brie' || item.name === 'Conjured' ? 2 : 1,
   degrade_quality: item.name === 'Aged Brie' || item.name === 'Backstage passes' ? '+' : '-',
   degrade: item.name !== 'Sulfuras'
 })
 
 const degrade_quality = item => {
-  const MULTIPLIER = item.sell_in > MIN_SELL_IN_LIMIT ? item.multiplier : item.multiplier * 2
-  return Object.assign({}, item, { quality: item.quality - MULTIPLIER < 0 ? 0 : item.quality - MULTIPLIER })
+  const QUALITY_VARIANT = item.sell_in > MIN_SELL_IN_LIMIT ? item.quality_variant : item.quality_variant * 2
+  return Object.assign({}, item, { quality: item.quality - QUALITY_VARIANT < 0 ? 0 : item.quality - QUALITY_VARIANT })
 }
 
 const upgrade_quality_backstage = item => {
-  let MULTIPLIER = item.multiplier
+  let QUALITY_VARIANT = item.quality_variant
   if (item.sell_in < 6) {
-    MULTIPLIER = item.multiplier * 3
+    QUALITY_VARIANT = item.quality_variant * 3
   } else if (item.sell_in < 11) {
-    MULTIPLIER = item.multiplier * 2
+    QUALITY_VARIANT = item.quality_variant * 2
   }
 
   if (item.sell_in < MIN_SELL_IN_LIMIT) {
     return Object.assign({}, item, { quality: 0 })
   }
   else {
-    if (item.quality + MULTIPLIER < MAX_QUALITY_LIMIT) {
-      return Object.assign({}, item, { quality: item.quality + MULTIPLIER })
+    if (item.quality + QUALITY_VARIANT < MAX_QUALITY_LIMIT) {
+      return Object.assign({}, item, { quality: item.quality + QUALITY_VARIANT })
     }
     else {
       return Object.assign({}, item, { quality: MAX_QUALITY_LIMIT })
@@ -43,12 +43,12 @@ const upgrade_quality_backstage = item => {
 }
 
 const upgrade_quality = item => {
-  if (item.quality + item.multiplier < MAX_QUALITY_LIMIT) {
+  if (item.quality + item.quality_variant < MAX_QUALITY_LIMIT) {
     switch (item.name) {
       case 'Backstage passes':
         return upgrade_quality_backstage(item)
       default:
-        return Object.assign({}, item, { quality: item.quality + item.multiplier })
+        return Object.assign({}, item, { quality: item.quality + item.quality_variant })
     }
   } else {
     return Object.assign({}, item, { quality: MAX_QUALITY_LIMIT })
