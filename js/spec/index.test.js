@@ -2,34 +2,6 @@ const { MIN_QUALITY_LIMIT, MAX_QUALITY_LIMIT, MIN_SELL_IN_LIMIT } = require('../
 const { create_item, update_quality } = require('../src/index')
 
 describe('Gilded Rose', () => {
-  describe('#create_item', () => {
-    const NAME = 'Item 1'
-    const SELL_IN = 10
-    const QUALITY = 25
-    const DEGRADE_QUALITY = '+'
-    const DEGRADE = false
-    const MULTIPLIER = 2
-
-    it('returns the item with default values when optional values are not informed', () => {
-      const item = create_item(NAME, SELL_IN, QUALITY)
-      expect(item.name).toBe(NAME)
-      expect(item.sell_in).toBe(SELL_IN)
-      expect(item.quality).toBe(QUALITY)
-      expect(item.degrade_quality).toBe('-')
-      expect(item.degrade).toBe(true)
-    })
-
-    it('returns the item with informed values when optional values are informed', () => {
-      const item = create_item(NAME, SELL_IN, QUALITY, { degrade_quality: DEGRADE_QUALITY, degrade: DEGRADE, multiplier: MULTIPLIER })
-      expect(item.name).toBe(NAME)
-      expect(item.sell_in).toBe(SELL_IN)
-      expect(item.quality).toBe(QUALITY)
-      expect(item.degrade_quality).toBe(DEGRADE_QUALITY)
-      expect(item.degrade).toBe(DEGRADE)
-      expect(item.multiplier).toBe(MULTIPLIER)
-    })
-  })
-
   describe('#update_quality', () => {
     describe('standard items', () => {
       const items = new Array(1,2).map(number => create_item(
@@ -91,7 +63,7 @@ describe('Gilded Rose', () => {
 
         describe('when multiplier is 2', () => {
           const items = [
-            create_item('Conjured', MIN_SELL_IN_LIMIT, 25, { multiplier: 2})
+            create_item('Conjured', MIN_SELL_IN_LIMIT, 25)
           ]
 
           it('returns item with less four of quality points', () => {
@@ -117,10 +89,9 @@ describe('Gilded Rose', () => {
       })
     })
 
-    describe('no degraded item', () => {
+    describe('no degraded to "Sulfuras" item', () => {
       const items = [
-        create_item('Sulfuras, Hand of Ragnaros', 10, 25, { degrade: false }),
-        create_item('No degrated', 10, 25, { degrade: false })
+        create_item('Sulfuras', 10, 25)
       ]
 
       it('returns the same items', () => {
@@ -135,13 +106,12 @@ describe('Gilded Rose', () => {
       describe('degrade quality is positive', () => {
         describe('quality is less than maximun', () => {
           const items = [
-            create_item('increase quality', 10, 25, { degrade_quality: '+' }),
-            create_item('increase quality 2', 10, 25, { degrade_quality: '+' })
+            create_item('Aged Brie', 10, 25)
           ]
 
           it('returns quality bigger than before', () => {
             update_quality(items).forEach(item => {
-              expect(item.quality).toBe(26)
+              expect(item.quality).toBe(27)
               expect(item.sell_in).toBe(9)
             })
           })
@@ -149,8 +119,7 @@ describe('Gilded Rose', () => {
 
         describe('quality is the maximun', () => {
           const items = [
-            create_item('increase quality', 10, MAX_QUALITY_LIMIT, { degrade_quality: '+' }),
-            create_item('increase quality 2', 10, MAX_QUALITY_LIMIT, { degrade_quality: '+' })
+            create_item('Aged Brie', 10, MAX_QUALITY_LIMIT, { degrade_quality: '+' })
           ]
 
           it('returns same quality', () => {
@@ -161,11 +130,11 @@ describe('Gilded Rose', () => {
           })
         })
 
-        describe('item is "Backstage passes to a TAFKAL80ETC concert"', () => {
+        describe('item is "Backstage passes"', () => {
           describe('sell in is less than 11 days', () => {
             describe('quality is less than maximun', () => {
               const items = [
-                create_item('Backstage passes to a TAFKAL80ETC concert', 10, 25, { degrade_quality: '+' }),
+                create_item('Backstage passes', 10, 25, { degrade_quality: '+' }),
               ]
 
               it('returns quality with more 2 points', () => {
@@ -178,7 +147,7 @@ describe('Gilded Rose', () => {
 
             describe('quality is the maximun', () => {
               const items = [
-                create_item('Backstage passes to a TAFKAL80ETC concert', 10, MAX_QUALITY_LIMIT, { degrade_quality: '+' }),
+                create_item('Backstage passes', 10, MAX_QUALITY_LIMIT, { degrade_quality: '+' }),
               ]
 
               it('returns same quality', () => {
@@ -191,7 +160,7 @@ describe('Gilded Rose', () => {
 
             describe('quality is one point less the maximun', () => {
               const items = [
-                create_item('Backstage passes to a TAFKAL80ETC concert', 10, MAX_QUALITY_LIMIT -1, { degrade_quality: '+' }),
+                create_item('Backstage passes', 10, MAX_QUALITY_LIMIT -1, { degrade_quality: '+' }),
               ]
 
               it('returns same quality', () => {
@@ -206,7 +175,7 @@ describe('Gilded Rose', () => {
           describe('sell in is less than 6 days', () => {
             describe('quality is less than maximun', () => {
               const items = [
-                create_item('Backstage passes to a TAFKAL80ETC concert', 5, 25, { degrade_quality: '+' })
+                create_item('Backstage passes', 5, 25, { degrade_quality: '+' })
               ]
 
               it('returns quality with more 3 points', () => {
@@ -219,7 +188,7 @@ describe('Gilded Rose', () => {
 
             describe('quality is the maximun', () => {
               const items = [
-                create_item('Backstage passes to a TAFKAL80ETC concert', 5, MAX_QUALITY_LIMIT, { degrade_quality: '+' })
+                create_item('Backstage passes', 5, MAX_QUALITY_LIMIT)
               ]
 
               it('returns same quality', () => {
@@ -232,7 +201,7 @@ describe('Gilded Rose', () => {
 
             describe('quality is one point less the maximun', () => {
               const items = [
-                create_item('Backstage passes to a TAFKAL80ETC concert', 5, MAX_QUALITY_LIMIT -1, { degrade_quality: '+' }),
+                create_item('Backstage passes', 5, MAX_QUALITY_LIMIT -1),
               ]
 
               it('returns same quality', () => {
@@ -245,7 +214,7 @@ describe('Gilded Rose', () => {
 
             describe('quality is one point less the maximun', () => {
               const items = [
-                create_item('Backstage passes to a TAFKAL80ETC concert', 5, MAX_QUALITY_LIMIT - 2, { degrade_quality: '+' }),
+                create_item('Backstage passes', 5, MAX_QUALITY_LIMIT - 2),
               ]
 
               it('returns same quality', () => {
@@ -258,7 +227,7 @@ describe('Gilded Rose', () => {
 
             describe('quality drops to 0 after concert', () => {
               const items = [
-                create_item('Backstage passes to a TAFKAL80ETC concert', 0, 25, { degrade_quality: '+' })
+                create_item('Backstage passes', 0, 25)
               ]
 
               it('returns 0 quality', () => {
