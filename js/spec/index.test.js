@@ -61,7 +61,7 @@ describe('Gilded Rose', () => {
           })
         })
 
-        describe('when multiplier is 2', () => {
+        describe('when is "Conjured" item', () => {
           const items = [
             create_item('Conjured', MIN_SELL_IN_LIMIT, 25)
           ]
@@ -75,7 +75,7 @@ describe('Gilded Rose', () => {
         })
       })
 
-      describe('when multiplier is 2', () => {
+      describe('when is "Conjured" item', () => {
         const items = [
           create_item('Conjured', 5, 25, { multiplier: 2 })
         ]
@@ -104,28 +104,30 @@ describe('Gilded Rose', () => {
 
     describe('increase quality', () => {
       describe('degrade quality is positive', () => {
-        describe('quality is less than maximun', () => {
-          const items = [
-            create_item('Aged Brie', 10, 25)
-          ]
+        describe('item is "Aged Brie"', () => {
+          describe('quality is less than maximun', () => {
+            const items = [
+              create_item('Aged Brie', 10, 25)
+            ]
 
-          it('returns quality bigger than before', () => {
-            update_quality(items).forEach(item => {
-              expect(item.quality).toBe(27)
-              expect(item.sell_in).toBe(9)
+            it('returns quality bigger than before', () => {
+              update_quality(items).forEach(item => {
+                expect(item.quality).toBe(27)
+                expect(item.sell_in).toBe(9)
+              })
             })
           })
-        })
 
-        describe('quality is the maximun', () => {
-          const items = [
-            create_item('Aged Brie', 10, MAX_QUALITY_LIMIT, { degrade_quality: '+' })
-          ]
+          describe('quality is the maximun', () => {
+            const items = [
+              create_item('Aged Brie', 10, MAX_QUALITY_LIMIT, { degrade_quality: '+' })
+            ]
 
-          it('returns same quality', () => {
-            update_quality(items).forEach(item => {
-              expect(item.quality).toBe(MAX_QUALITY_LIMIT)
-              expect(item.sell_in).toBe(9)
+            it('returns same quality', () => {
+              update_quality(items).forEach(item => {
+                expect(item.quality).toBe(MAX_QUALITY_LIMIT)
+                expect(item.sell_in).toBe(9)
+              })
             })
           })
         })
