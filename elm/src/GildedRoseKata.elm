@@ -8,12 +8,23 @@ type alias GildedRose =
 type Item
     = Item String Int Int
 
-
 updateQuality : GildedRose -> GildedRose
 updateQuality =
-    List.map updateQualityItem
+    List.map updateItem
+    
+updateItem : Item -> Item
+updateItem item =
+  item
+  |> updateSellIn
+  |> updateQualityItem
 
-
+updateSellIn : Item -> Item
+updateSellIn (Item name sellIn quality) =
+  case name of
+    "Sulfuras" -> (Item name sellIn quality)
+    _ -> (Item name (sellIn - 1) quality)
+  
+updateQualityItem : Item -> Item
 updateQualityItem (Item name sellIn quality) =
     let
         quality_ =
@@ -29,10 +40,10 @@ updateQualityItem (Item name sellIn quality) =
                 quality
                     + 1
                     + (if name == "Backstage passes" then
-                        if sellIn < 11 then
+                        if sellIn < 10 then
                             if quality < 49 then
                                 1
-                                    + (if sellIn < 6 then
+                                    + (if sellIn < 5 then
                                         if quality < 48 then
                                             1
                                         else
@@ -50,27 +61,22 @@ updateQualityItem (Item name sellIn quality) =
             else
                 quality
 
-        sellIn_ =
-            if name /= "Sulfuras" then
-                sellIn - 1
-            else
-                sellIn
     in
-        if sellIn_ < 0 then
+        if sellIn < 0 then
             if name /= "Aged Brie" then
                 if name /= "Backstage passes" then
                     if quality_ > 0 then
                         if name /= "Sulfuras" then
-                            (Item name sellIn_ (quality_ - 1))
+                            (Item name sellIn (quality_ - 1))
                         else
-                            (Item name sellIn_ quality_)
+                            (Item name sellIn quality_)
                     else
-                        (Item name sellIn_ quality_)
+                        (Item name sellIn quality_)
                 else
-                    (Item name sellIn_ (quality_ - quality_))
+                    (Item name sellIn (quality_ - quality_))
             else if quality_ < 50 then
-                (Item name sellIn_ (quality_ + 1))
+                (Item name sellIn (quality_ + 1))
             else
-                (Item name sellIn_ quality_)
+                (Item name sellIn quality_)
         else
-            (Item name sellIn_ quality_)
+            (Item name sellIn quality_)
