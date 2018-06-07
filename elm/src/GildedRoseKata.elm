@@ -53,7 +53,7 @@ updateQualityItem item =
     step = getStep item
   in
     case item.name of
-      "Sulfuras" -> item.quality
+      "Sulfuras" -> 80
       "Aged Brie" -> getAgedBrieQuality item step
       "Backstage passes" -> getBackstageQuality item step
       _ -> getStandardQuality item step

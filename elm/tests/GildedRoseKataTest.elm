@@ -186,7 +186,7 @@ all =
                 \() ->
                   let
                     items = [Item "Sulfuras" 11 26]
-                    expected = [Item "Sulfuras" 11 26]
+                    expected = [Item "Sulfuras" 11 80]
                   in
                     Expect.equal (updateQuality items) expected
               ],
@@ -195,7 +195,7 @@ all =
                 \() ->
                   let
                     items = [Item "Sulfuras" 11 50]
-                    expected = [Item "Sulfuras" 11 50]
+                    expected = [Item "Sulfuras" 11 80]
                   in
                     Expect.equal (updateQuality items) expected
               ],
@@ -204,7 +204,7 @@ all =
                 \() ->
                   let
                     items = [Item "Sulfuras" 11 0]
-                    expected = [Item "Sulfuras" 11 0]
+                    expected = [Item "Sulfuras" 11 80]
                   in
                     Expect.equal (updateQuality items) expected
               ]
@@ -215,7 +215,7 @@ all =
                 \() ->
                   let
                     items = [Item "Sulfuras" 0 25]
-                    expected = [Item "Sulfuras" 0  25]
+                    expected = [Item "Sulfuras" 0  80]
                   in
                     Expect.equal (updateQuality items) expected
               ],
@@ -227,7 +227,7 @@ all =
                       Item "Sulfuras" 0 50
                     ]
                     expected = [
-                      Item "Sulfuras" 0 50
+                      Item "Sulfuras" 0 80
                     ]
                   in
                     Expect.equal (updateQuality items) expected
@@ -240,7 +240,7 @@ all =
                       Item "Sulfuras" 0 0
                     ]
                     expected = [
-                      Item "Sulfuras" 0 0
+                      Item "Sulfuras" 0 80
                     ]
                   in
                     Expect.equal (updateQuality items) expected
