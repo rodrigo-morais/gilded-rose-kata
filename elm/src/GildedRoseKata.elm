@@ -1,82 +1,91 @@
-module GildedRoseKata exposing (Item(Item), updateQuality)
+module GildedRoseKata exposing (Item, updateQuality)
+
+
+import Guards exposing ((|=), (=>))
 
 
 type alias GildedRose =
     List Item
 
 
-type Item
-    = Item String Int Int
+type alias SellIn = Int
+
+
+type alias Quality = Int
+
+
+type alias Step = Int
+
+
+type alias Item
+    =
+    { name : String
+    , sellIn : SellIn
+    , quality : Quality
+    }
+
 
 updateQuality : GildedRose -> GildedRose
 updateQuality =
     List.map updateItem
+
     
 updateItem : Item -> Item
 updateItem item =
-  item
-  |> updateSellIn
-  |> updateQualityItem
+  let
+    sellIn_ = updateSellInItem item.name item.sellIn
 
-updateSellIn : Item -> Item
-updateSellIn (Item name sellIn quality) =
+    quality_ = updateQualityItem { item | sellIn = sellIn_ }
+  in
+    { item | sellIn = sellIn_, quality = quality_ }
+
+
+updateSellInItem : String -> SellIn -> SellIn
+updateSellInItem name sellIn =
   case name of
-    "Sulfuras" -> (Item name sellIn quality)
-    _ -> (Item name (sellIn - 1) quality)
-  
-updateQualityItem : Item -> Item
-updateQualityItem (Item name sellIn quality) =
-    let
-        quality_ =
-            if (name /= "Aged Brie" && name /= "Backstage passes") then
-                if quality > 0 then
-                    if name /= "Sulfuras" then
-                        quality - 1
-                    else
-                        quality
-                else
-                    quality
-            else if quality < 50 then
-                quality
-                    + 1
-                    + (if name == "Backstage passes" then
-                        if sellIn < 10 then
-                            if quality < 49 then
-                                1
-                                    + (if sellIn < 5 then
-                                        if quality < 48 then
-                                            1
-                                        else
-                                            0
-                                       else
-                                        0
-                                      )
-                            else
-                                0
-                        else
-                            0
-                       else
-                        0
-                      )
-            else
-                quality
+    "Sulfuras" -> sellIn
+    _ -> sellIn - 1
 
-    in
-        if sellIn < 0 then
-            if name /= "Aged Brie" then
-                if name /= "Backstage passes" then
-                    if quality_ > 0 then
-                        if name /= "Sulfuras" then
-                            (Item name sellIn (quality_ - 1))
-                        else
-                            (Item name sellIn quality_)
-                    else
-                        (Item name sellIn quality_)
-                else
-                    (Item name sellIn (quality_ - quality_))
-            else if quality_ < 50 then
-                (Item name sellIn (quality_ + 1))
-            else
-                (Item name sellIn quality_)
-        else
-            (Item name sellIn quality_)
+
+updateQualityItem : Item -> Quality
+updateQualityItem item =
+  let
+    step = getStep item
+  in
+    case item.name of
+      "Sulfuras" -> item.quality
+      "Aged Brie" -> getAgedBrieQuality item step
+      "Backstage passes" -> getBackstageQuality item step
+      _ -> getStandardQuality item step
+
+
+getStep : Item -> Step
+getStep item =
+  case item.name of
+    "Backstage passes" -> (item.sellIn < 6 => 3
+                          |= item.sellIn < 10 => 2
+                          |= 1)
+    _ -> (item.sellIn < 0 => 2
+         |= 1)
+
+
+getStandardQuality : Item -> Step -> Quality
+getStandardQuality item step =
+  item.quality > 0 => item.quality - step
+  |= 0
+
+
+getIncreaseQuality : Item -> Step -> Quality
+getIncreaseQuality item step =
+  item.quality + step < 50 => item.quality + step
+  |= 50
+
+
+getAgedBrieQuality : Item -> Step -> Quality
+getAgedBrieQuality item step = getIncreaseQuality item step
+
+
+getBackstageQuality : Item -> Step -> Quality
+getBackstageQuality item step =
+  item.sellIn <= 0 => 0
+  |= getIncreaseQuality item step

@@ -3,7 +3,7 @@ module GildedRoseKataTest exposing (..)
 import Test exposing (..)
 import Expect
 
-import GildedRoseKata exposing (updateQuality, Item(Item))
+import GildedRoseKata exposing (updateQuality, Item)
 
 
 all : Test
