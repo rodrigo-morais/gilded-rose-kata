@@ -103,6 +103,82 @@ all =
               ]
             ] 
           ],
+        describe "Conjured"
+          [ describe "when sell_in is up to the limit"
+            [  describe "when items has no limits of quality"
+              [ test "returns items with less quality and sell_in" <|
+                \() ->
+                  let
+                    items = [Item "Conjured" 11 26]
+                    expected = [Item "Conjured" 10 24]
+                  in
+                    Expect.equal (updateQuality items) expected
+              ],
+              describe "when limit the quality is the maximum"
+              [ test "returns items with less quality and sell_in" <|
+                \() ->
+                  let
+                    items = [
+                      Item "Conjured" 13 50
+                    ]
+                    expected = [
+                      Item "Conjured" 12 48
+                    ]
+                  in
+                    Expect.equal (updateQuality items) expected
+              ],
+              describe "when limit the quality is the minimum"
+              [ test "returns items with less sell_in and same quality" <|
+                \() ->
+                  let
+                    items = [
+                      Item "Conjured" 13 0
+                    ]
+                    expected = [
+                      Item "Conjured" 12 0
+                    ]
+                  in
+                    Expect.equal (updateQuality items) expected
+              ]
+            ], 
+            describe "when sell_in is in the limit"
+            [  describe "when items has no limits of quality"
+              [ test "returns items with less quality and sell_in" <|
+                \() ->
+                  let
+                    items = [Item "Conjured" 0 25]
+                    expected = [Item "Conjured" -1 21]
+                  in
+                    Expect.equal (updateQuality items) expected
+              ],
+              describe "when limit the quality is the maximum"
+              [ test "returns items with less quality and sell_in" <|
+                \() ->
+                  let
+                    items = [
+                      Item "Conjured" 0 50
+                    ]
+                    expected = [
+                      Item "Conjured" -1 46
+                    ]
+                  in
+                    Expect.equal (updateQuality items) expected
+              ],
+              describe "when limit the quality is the minimum"
+              [ test "returns items with less sell_in and same quality" <|
+                \() ->
+                  let
+                    items = [
+                      Item "Conjured" 0 0
+                    ]
+                    expected = [
+                      Item "Conjured" -1 0
+                    ]
+                  in
+                    Expect.equal (updateQuality items) expected
+              ]
+            ] 
+          ],
         describe "Aged Brie"
           [ describe "when sell_in is up to the limit"
             [  describe "when items has no limits of quality"

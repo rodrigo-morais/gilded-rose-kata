@@ -46,13 +46,15 @@ getStep item =
     "Backstage passes" -> (item.sellIn < 6 => 3
                           |= item.sellIn < 10 => 2
                           |= standardStep)
-    _ -> (item.sellIn < sellInLimit => 2
+    "Conjured" -> (item.sellIn < sellInLimit => standardStep * 4
+                  |= standardStep * 2)
+    _ -> (item.sellIn < sellInLimit => standardStep * 2
          |= standardStep)
 
 
 getStandardQuality : Item -> Step -> Quality
 getStandardQuality item step =
-  item.quality > 0 => item.quality - step
+  item.quality - step > 0 => item.quality - step
   |= 0
 
 
