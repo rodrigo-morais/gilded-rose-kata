@@ -1,28 +1,8 @@
-module GildedRoseKata exposing (Item, updateQuality)
+module GildedRoseKata exposing (updateQuality)
 
 
 import Guards exposing ((|=), (=>))
-
-
-type alias GildedRose =
-    List Item
-
-
-type alias SellIn = Int
-
-
-type alias Quality = Int
-
-
-type alias Step = Int
-
-
-type alias Item
-    =
-    { name : String
-    , sellIn : SellIn
-    , quality : Quality
-    }
+import Models exposing (GildedRose, SellIn, Quality, Step, Item)
 
 
 updateQuality : GildedRose -> GildedRose
