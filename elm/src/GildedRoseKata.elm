@@ -3,6 +3,7 @@ module GildedRoseKata exposing (updateQuality)
 
 import Guards exposing ((|=), (=>))
 import Models exposing (GildedRose, SellIn, Quality, Step, Item)
+import Constants exposing (sellInLimit, maxQualityLimit, backspaceMinQualityLimit, sulfurasMaxQualityLimit, standardStep)
 
 
 updateQuality : GildedRose -> GildedRose
@@ -33,7 +34,7 @@ updateQualityItem item =
     step = getStep item
   in
     case item.name of
-      "Sulfuras" -> 80
+      "Sulfuras" -> sulfurasMaxQualityLimit
       "Aged Brie" -> getAgedBrieQuality item step
       "Backstage passes" -> getBackstageQuality item step
       _ -> getStandardQuality item step
@@ -44,9 +45,9 @@ getStep item =
   case item.name of
     "Backstage passes" -> (item.sellIn < 6 => 3
                           |= item.sellIn < 10 => 2
-                          |= 1)
-    _ -> (item.sellIn < 0 => 2
-         |= 1)
+                          |= standardStep)
+    _ -> (item.sellIn < sellInLimit => 2
+         |= standardStep)
 
 
 getStandardQuality : Item -> Step -> Quality
@@ -57,8 +58,8 @@ getStandardQuality item step =
 
 getIncreaseQuality : Item -> Step -> Quality
 getIncreaseQuality item step =
-  item.quality + step < 50 => item.quality + step
-  |= 50
+  item.quality + step < maxQualityLimit => item.quality + step
+  |= maxQualityLimit
 
 
 getAgedBrieQuality : Item -> Step -> Quality
