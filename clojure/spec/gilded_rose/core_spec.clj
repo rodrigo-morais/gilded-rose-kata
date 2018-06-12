@@ -54,4 +54,20 @@
       )
     )
   )
+  (describe "Sulfuras"
+    (describe "when sell by date is not in the limit"
+      (it "returns the maximum quality for Sulfuras and same sell by date"
+        (let [item-1 (item "Sulfuras, Hand of Ragnaros" 10 25)
+              updated-items (update-quality [item-1])]
+          (should= {:name "Sulfuras, Hand of Ragnaros" :sell-in 10 :quality 80} (first updated-items)))
+      )
+    )
+    (describe "when sell by date is in the limit"
+      (it "returns the maximum quality for Sulfuras and same sell by date"
+        (let [item-1 (item "Sulfuras, Hand of Ragnaros" 0 25)
+              updated-items (update-quality [item-1])]
+          (should= {:name "Sulfuras, Hand of Ragnaros" :sell-in 0 :quality 80} (first updated-items)))
+      )
+    )
+  )
 )

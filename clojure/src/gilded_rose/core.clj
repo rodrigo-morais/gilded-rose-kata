@@ -21,6 +21,8 @@
             (merge item {:quality (dec (dec (:quality item)))})))
       (or (= "+5 Dexterity Vest" (:name item)) (= "Elixir of the Mongoose" (:name item)))
         (merge item {:quality (dec (:quality item))})
+      (= "Sulfuras, Hand of Ragnaros" (:name item))
+        (merge item {:quality 80})
       (or (<= (:quality item) 0))
         (merge item {:quality 0})
       :else (merge item {:quality (dec (:quality item))})))
