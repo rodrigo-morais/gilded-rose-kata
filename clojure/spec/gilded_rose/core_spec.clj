@@ -70,4 +70,59 @@
       )
     )
   )
+  (describe "Aged Brie"
+    (describe "when sell by date is not in the limit"
+      (describe "when quality is not in the limit"
+        (it "returns more one of quality and sell by date"
+          (let [item-1 (item "Aged Brie" 10 25)
+                updated-items (update-quality [item-1])]
+            (should= {:name "Aged Brie" :sell-in 9 :quality 26} (first updated-items)))
+        )
+      )
+      (describe "when quality is the minimum limit"
+        (it "returns less one of sell by date and one more of quality"
+          (let [item-1 (item "Aged Brie" 10 0)
+                updated-items (update-quality [item-1])]
+            (should= {:name "Aged Brie" :sell-in 9 :quality 1} (first updated-items)))
+        )
+      )
+      (describe "when quality is the maximum limit"
+        (it "returns maximum limit of quality and sell by date"
+          (let [item-1 (item "Aged Brie" 10 50)
+                updated-items (update-quality [item-1])]
+            (should= {:name "Aged Brie" :sell-in 9 :quality 50} (first updated-items)))
+        )
+      )
+    )
+    (describe "when sell by date is in the limit"
+      (describe "when quality is not in the limit"
+        (it "returns two more of quality and less one ofsell by date"
+          (let [item-1 (item "Aged Brie" 0 25)
+                updated-items (update-quality [item-1])]
+            (should= {:name "Aged Brie" :sell-in -1 :quality 27} (first updated-items)))
+        )
+      )
+      (describe "when quality is the minimum limit"
+        (it "returns less one of sell by date and two more of quality"
+          (let [item-1 (item "Aged Brie" 0 0)
+                updated-items (update-quality [item-1])]
+            (should= {:name "Aged Brie" :sell-in -1 :quality 2} (first updated-items)))
+        )
+      )
+      (describe "when quality is the maximum limit"
+        (it "returns the maximum limit of quality and less one of sell by date"
+          (let [item-1 (item "Aged Brie" 0 50)
+                updated-items (update-quality [item-1])]
+            (should= {:name "Aged Brie" :sell-in -1 :quality 50} (first updated-items)))
+        )
+      )
+      (describe "when quality is one less the maximum limit"
+        (it "returns the maximum limit of quality and less one of sell by date"
+          (let [item-1 (item "Aged Brie" 0 49)
+                updated-items (update-quality [item-1])]
+            (should= {:name "Aged Brie" :sell-in -1 :quality 50} (first updated-items)))
+        )
+      )
+    )
+  )
 )
