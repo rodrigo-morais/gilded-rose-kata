@@ -28,6 +28,9 @@
     (< (:sell-in item) sell-in-limit) (merge item {:quality quality-min-limit})
     :else (merge item {:quality (min quality-max-limit (+ (:quality item) step))})))
 
+(defmethod update-item-quality conjured [step item]
+  (merge item {:quality (max quality-min-limit (- (:quality item) (* step 2)))}))
+
 (defmethod update-item-quality :default [step item]
   (merge item {:quality (max quality-min-limit (- (:quality item) step))}))
 
