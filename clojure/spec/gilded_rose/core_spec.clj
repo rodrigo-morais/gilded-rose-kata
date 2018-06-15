@@ -18,39 +18,39 @@
       )
       (describe "when quality is the minimum limit"
         (it "returns less one of sell by date and the minimum limit of quality"
-          (let [item-1 (item "Item 1" 10 0)
+          (let [item-1 (item "Item 1" 10 quality-min-limit)
                 updated-items (update-quality [item-1])]
-            (should= {:name "Item 1" :sell-in 9 :quality 0} (first updated-items)))
+            (should= {:name "Item 1" :sell-in 9 :quality quality-min-limit} (first updated-items)))
         )
       )
       (describe "when quality is the maximum limit"
         (it "returns less one of quality and sell by date"
-          (let [item-1 (item "Item 1" 10 QUALITY_MAX_LIMIT)
+          (let [item-1 (item "Item 1" 10 quality-max-limit)
                 updated-items (update-quality [item-1])]
-            (should= {:name "Item 1" :sell-in 9 :quality (- QUALITY_MAX_LIMIT 1)} (first updated-items)))
+            (should= {:name "Item 1" :sell-in 9 :quality (- quality-max-limit 1)} (first updated-items)))
         )
       )
     )
     (describe "when sell by date is in the limit"
       (describe "when quality is not in the limit"
         (it "returns less two of quality and less one of sell by date"
-          (let [item-1 (item "Item 1" 0 25)
+          (let [item-1 (item "Item 1" sell-in-limit 25)
                 updated-items (update-quality [item-1])]
             (should= {:name "Item 1" :sell-in -1 :quality 23} (first updated-items)))
         )
       )
       (describe "when quality is the minimum limit"
         (it "returns less one of sell by date and the minimum limit of quality"
-          (let [item-1 (item "Item 1" 0 0)
+          (let [item-1 (item "Item 1" sell-in-limit quality-min-limit)
                 updated-items (update-quality [item-1])]
-            (should= {:name "Item 1" :sell-in -1 :quality 0} (first updated-items)))
+            (should= {:name "Item 1" :sell-in -1 :quality quality-min-limit} (first updated-items)))
         )
       )
       (describe "when quality is the maximum limit"
         (it "returns less two of quality and less one of sell by date"
-          (let [item-1 (item "Item 1" 0 QUALITY_MAX_LIMIT)
+          (let [item-1 (item "Item 1" sell-in-limit quality-max-limit)
                 updated-items (update-quality [item-1])]
-            (should= {:name "Item 1" :sell-in -1 :quality (- QUALITY_MAX_LIMIT 2)} (first updated-items)))
+            (should= {:name "Item 1" :sell-in -1 :quality (- quality-max-limit 2)} (first updated-items)))
         )
       )
     )

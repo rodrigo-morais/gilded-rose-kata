@@ -1,54 +1,47 @@
 (ns gilded-rose.core
 (:require [gilded-rose.constants :refer :all]))
 
-(defn update-items-quality [item]
+(defn pass-off-sell-date [item]
+  (< (:sell-in item) sell-in-limit))
+
+(defmulti get-step (fn [item] (item :name)))
+
+(defmethod get-step backstage [item]
   (cond
-    (and (< (:sell-in item) SELL_IN_LIMIT) (= BACKSTAGE (:name item)))
-      (merge item {:quality QUALITY_MIN_LIMIT})
-    (= (:name item) AGED_BRIE)
-      (if (< (:sell-in item) SELL_IN_LIMIT)
-        (if (< (:quality item) (- QUALITY_MAX_LIMIT 1))
-          (merge item {:quality (inc (inc (:quality item)))})
-          (merge item {:quality QUALITY_MAX_LIMIT}))
-        (if (< (:quality item) QUALITY_MAX_LIMIT)
-          (merge item {:quality (inc (:quality item))})
-          (merge item {:quality QUALITY_MAX_LIMIT})))
-    (= (:name item) BACKSTAGE)
-      (if (and (= (:name item) BACKSTAGE) (>= (:sell-in item) 5) (< (:sell-in item) 10))
-        (if (< (:quality item) (- QUALITY_MAX_LIMIT 1))
-          (merge item {:quality (inc (inc (:quality item)))})
-          (merge item {:quality QUALITY_MAX_LIMIT}))
-        (if (and (= (:name item) BACKSTAGE) (>= (:sell-in item) SELL_IN_LIMIT) (< (:sell-in item) 5))
-        (if (< (:quality item) (- QUALITY_MAX_LIMIT 2))
-          (merge item {:quality (inc (inc (inc (:quality item))))})
-          (merge item {:quality QUALITY_MAX_LIMIT}))
-          (if (< (:quality item) QUALITY_MAX_LIMIT)
-            (merge item {:quality (inc (:quality item))})
-            item)))
-    (< (:sell-in item) SELL_IN_LIMIT)
-      (if (= BACKSTAGE (:name item))
-        (merge item {:quality QUALITY_MIN_LIMIT})
-        (if (<= (dec (dec (:quality item))) QUALITY_MIN_LIMIT)
-          (merge item {:quality QUALITY_MIN_LIMIT})
-          (merge item {:quality (dec (dec (:quality item)))})))
-    (or (= "+5 Dexterity Vest" (:name item)) (= "Elixir of the Mongoose" (:name item)))
-      (merge item {:quality (dec (:quality item))})
-    (= SULFURAS (:name item))
-      (merge item {:quality SULFURAS_QUALITY_MAX_LIMIT})
-    (or (<= (:quality item) QUALITY_MIN_LIMIT))
-      (merge item {:quality QUALITY_MIN_LIMIT})
-    :else (merge item {:quality (dec (:quality item))})
-  )
-)
+    (< (:sell-in item) 5) 3
+    (< (:sell-in item) 10) 2
+    :else 1))
+
+(defmethod get-step :default [item]
+  (if (pass-off-sell-date item) (* standard-step 2) standard-step))
+
+(defmulti update-item-quality (fn [step item] (item :name)))
+
+(defmethod update-item-quality sulfuras [step item]
+  (merge item {:quality 80}))
+
+(defmethod update-item-quality aged-brie [step item]
+  (merge item {:quality (min quality-max-limit (+ (:quality item) step))}))
+
+(defmethod update-item-quality backstage [step item]
+  (cond
+    (< (:sell-in item) sell-in-limit) (merge item {:quality quality-min-limit})
+    :else (merge item {:quality (min quality-max-limit (+ (:quality item) step))})))
+
+(defmethod update-item-quality :default [step item]
+  (merge item {:quality (max quality-min-limit (- (:quality item) step))}))
 
 (defn update-sell-in [item]
-  (if (not= SULFURAS (:name item))
+  (if (not= sulfuras (:name item))
     (merge item {:sell-in (dec (:sell-in item))})
-  item)
+    item)
 )
 
+(defn update-item [item]
+  (update-item-quality (get-step item) item))
+
 (defn update-quality [items]
-  (map (comp update-items-quality update-sell-in) items)
+  (map (comp update-item update-sell-in) items)
 )
 
 (defn item [item-name, sell-in, quality]
@@ -58,10 +51,10 @@
   (let [inventory 
     [
       (item "+5 Dexterity Vest" 10 20)
-      (item AGED_BRIE 2 0)
+      (item aged-brie 2 0)
       (item "Elixir of the Mongoose" 5 7)
-      (item "Sulfuras, Hand Of Ragnaros" 0 SULFURAS_QUALITY_MAX_LIMIT)
-      (item BACKSTAGE 15 20)
+      (item "Sulfuras, Hand Of Ragnaros" 0 sulfuras-quality-max-limit)
+      (item backstage 15 20)
     ]]
     (update-quality inventory)
     ))
